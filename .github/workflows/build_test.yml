@@ -1,0 +1,36 @@
+name: Bookeasy FE Businesses UI (Build & Test)
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - feature/*
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+    - name: Setup Build Env
+      uses: actions/setup-node@v2.1.2
+      with:
+        node-version: 15.x # Node version to use.
+        check-latest: true # Latest version satisfying the above version constraint.
+    - name: Install NPM Dependencies
+      run: npm install
+      working-directory: .
+    - name: Build
+      run: npx react-scripts build --watchAll=false
+      working-directory: .
+    - name: Test
+      run: npx react-scripts test --watchAll=false
+      working-directory: .
+    - name: Report Test Coverage
+      working-directory: .
+      run: npx react-scripts test --coverage --watchAll=false
+      
